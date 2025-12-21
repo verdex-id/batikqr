@@ -1,5 +1,5 @@
 {
-  "name": "qrcamo",
+  "name": "batikqr",
   "scripts": {
     "dev": "bun run --hot src/index.ts"
   },
