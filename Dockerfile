@@ -14,8 +14,8 @@ FROM oven/bun:latest
 
 WORKDIR /app
 
-COPY --from=builder /app/dist ./dist 
+COPY --from=builder /app/server ./server 
 
 EXPOSE 3000
 
-CMD ["bun", "run", "./dist/index.js"] 
+CMD ["./server"] 
