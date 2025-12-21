@@ -15,6 +15,7 @@ FROM oven/bun:latest
 WORKDIR /app
 
 COPY --from=builder /app/server ./server 
+COPY --from=builder /app/asset ./asset 
 
 EXPOSE 3000
 
