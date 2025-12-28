@@ -3,6 +3,7 @@ WORKDIR /app
 
 # Copy semua file (Pastikan sudah ada .dockerignore kosong agar ui/dist ikut)
 COPY . .
+COPY ui_dist ./ui/dist
 
 RUN bun install --frozen-lockfile
 RUN bun run build
