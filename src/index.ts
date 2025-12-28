@@ -9,7 +9,7 @@ app.use("/asset/*", serveStatic({ root: "./" }));
 
 app.onError((err, c) => {
     console.error(err);
-    return c.json({ error: err.message }, 500);
+    return c.json({ success: false, message: err.message }, 500);
 });
 
 app.route("/pattern", patternHandler);

@@ -13,30 +13,31 @@ export class PatternService {
   static async generatePattern(): Promise<Pattern> {
     const patternImages = new Glob("./asset/pattern/*.png");
     let availablePatterns: string[] = [];
+
     for await (const patternImage of patternImages.scan(".")) {
-      // Use path.basename to handle both Windows and Unix paths correctly
       const filename = basename(patternImage);
-      if (!filename) {
-        continue;
-      }
+      if (!filename) continue;
       const code = filename.split(".")[0];
-      if (!code) {
-        continue;
-      }
+      if (!code) continue;
       availablePatterns.push(code);
     }
 
     let patterns: string[] = [];
-    while (patterns.length < 3) {
-      const randomPattern =
-        availablePatterns[Math.floor(Math.random() * availablePatterns.length)];
-      patterns.push(randomPattern);
+    let pool = [...availablePatterns];
+
+    while (patterns.length < 3 && pool.length > 0) {
+      const randomIndex = Math.floor(Math.random() * pool.length);
+      const selected = pool.splice(randomIndex, 1)[0];
+      patterns.push(selected);
     }
+
     const timestamp = Date.now();
     const pattern = queryAddPattern.run(timestamp, patterns.join(","));
+
     if (!pattern.lastInsertRowid) {
       throw new Error("Failed to add pattern");
     }
+
     return {
       timestamp,
       codes: patterns.join(","),
