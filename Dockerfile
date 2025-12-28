@@ -2,30 +2,27 @@ FROM oven/bun:latest AS builder
 
 WORKDIR /app
 
-# 1. Copy lockfiles for both root and UI (if UI has its own)
-COPY package.json bun.lock ./
-COPY ui/package.json* ui/bun.lock* ./ui/
-
-# 2. Install all dependencies
-RUN bun install --frozen-lockfile
-# If the UI has its own package.json, install those deps too
-RUN cd ui && bun install
-
-# 3. Copy the rest of the source code
+# 1. Pastikan .dockerignore TIDAK mengecualikan folder ui/dist
 COPY . .
 
-# 4. Build the project
+# 2. Install dependencies untuk root (diperlukan untuk build server)
+RUN bun install --frozen-lockfile
+
+# 3. Run build
 RUN bun run build
 
 FROM oven/bun:latest
 
 WORKDIR /app
 
-# 5. Copy the compiled binary and assets
+# 4. Ambil executable server hasil compile
 COPY --from=builder /app/server ./server 
-# Note: Ensure 'asset' matches your Vite build output directory (usually 'dist' or 'public')
-COPY --from=builder /app/asset ./asset 
+
+# 5. Ambil hasil build UI dari local yang tadi di-copy ke /app/ui/dist
+# Di sini saya arahkan ke folder 'asset' sesuai Dockerfile lama Anda
+COPY --from=builder /app/ui/dist ./asset 
 
 EXPOSE 3000
 
+# Pastikan aplikasi Anda membaca file static dari folder /app/asset
 CMD ["./server"]
