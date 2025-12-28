@@ -2,7 +2,10 @@
   "name": "batikqr",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "build": "bun build --compile --target=bun --outfile=server ./src/index.ts"
+    "dev:ui": "cd ui && bun run dev",
+    "build:ui": "cd ui && bun run build",
+    "build": "bun run build:ui && bun build --compile --target=bun --outfile=server ./src/index.ts",
+    "start": "bun run --hot src/index.ts"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",

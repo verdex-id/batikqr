@@ -9,6 +9,11 @@ patternHandler.get("/", async (c) => {
   return c.html(<IndexPage pattern={pattern} />);
 });
 
+patternHandler.post("/", async (c) => {
+  const pattern = await PatternService.generatePattern();
+  return c.json({ success: true, pattern });
+});
+
 patternHandler.post("/scan", async (c) => {
   const { code, npm, name } = await c.req.json();
   const id = await PatternService.scan(code, npm, name);
